@@ -66,7 +66,7 @@ def main_menu():
                 pg.quit()
                 sys.exit()
                 quit()
-                
+
             if event.type == pg.USEREVENT and event.button == levels_button:
                 levels_menu()
 
