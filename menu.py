@@ -42,5 +42,5 @@ class ImageButton:
         if event.type == pg.MOUSEBUTTONDOWN and event.button == 1 and self.is_hovered:
             if self.sound:
                 self.sound.play()
-
+            pg.event.post(pg.event.Event(pg.USEREVENT, button = self))
 

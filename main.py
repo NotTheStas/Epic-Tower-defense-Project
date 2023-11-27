@@ -11,7 +11,7 @@ pg.init()
 clock = pg.time.Clock()
 
 #constants
-SCREEN_WIDTH = 1365
+SCREEN_WIDTH = 1088
 SCREEN_HEIGHT = 768
 FPS = 60
 
@@ -61,6 +61,15 @@ def main_menu():
                 sys.exit()
                 quit()
 
+            if event.type == pg.USEREVENT and event.button == quit_button:
+                main_menu_run = False
+                pg.quit()
+                sys.exit()
+                quit()
+                
+            if event.type == pg.USEREVENT and event.button == levels_button:
+                levels_menu()
+
             for buttons in [levels_button, quit_button]:
                 buttons.handle_event(event)
 
@@ -69,8 +78,49 @@ def main_menu():
             buttons.draw(screen)
 
         pg.display.flip()
-main_menu()
 
+def levels_menu():
+
+    #Создание кнопок
+    level1_button = ImageButton(SCREEN_WIDTH / 4, SCREEN_HEIGHT / 3, 200, 200, "1", 'assets/textures/gui/level/button/Unlocked@2x.png', '', 'assets/sound/button.wav')
+    level2_button = ImageButton(SCREEN_WIDTH / 2.20, SCREEN_HEIGHT / 3, 200, 200, "2", 'assets/textures/gui/level/button/Unlocked@2x.png', '', 'assets/sound/button.wav')
+    level3_button = ImageButton(SCREEN_WIDTH / 1.523, SCREEN_HEIGHT / 3, 200, 200, "3", 'assets/textures/gui/level/button/Unlocked@2x.png', '', 'assets/sound/button.wav')
+    back_button = ImageButton(20, 645, 110, 110, "", 'assets/textures/gui/buttons/square/ArrowLeft-Thin/Default@2x.png', 'assets/textures/gui/buttons/square/ArrowLeft-Thin/Hover@2x.png', 'assets/sound/button.wav')
+
+    menu_background = pg.image.load("assets/textures/menu.png")
+
+    levels_menu_run = True
+    while levels_menu_run:
+        screen.blit(menu_background, (0, 0))
+
+        # Надпись Выбор уровня
+        font = pg.font.Font(None, 72)
+        text_surface = font.render("Выбор уровня", True, (255, 255, 255))
+        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH / 2, 100))
+        screen.blit(text_surface, text_rect)
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                levels_menu_run = False
+                pg.quit()
+                sys.exit()
+                quit()
+
+            if (event.type == pg.USEREVENT and event.button == back_button) or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
+                levels_menu_run = False
+
+            for buttons in [level1_button, level2_button, level3_button, back_button]:
+                buttons.handle_event(event)
+
+        for buttons in [level1_button, level2_button, level3_button, back_button]:
+            buttons.check_hover(pg.mouse.get_pos())
+            buttons.draw(screen)
+
+        pg.display.flip()
+
+
+
+main_menu()
 #Основной игровой цикл
 game_run = True
 while game_run:
