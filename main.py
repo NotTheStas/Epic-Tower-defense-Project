@@ -5,14 +5,15 @@ import json
 from enemy import *
 from menu import *
 from world import *
+from turret import *
 
-#инициализация pygame
+# инициализация pygame
 pg.init()
 
-#создание clock
+# создание clock
 clock = pg.time.Clock()
 
-#переменные
+# переменные
 ROWS = 12
 COLS = 12
 TILE_SIZE = 64
@@ -20,23 +21,26 @@ SCREEN_WIDTH = 1088
 SCREEN_HEIGHT = 768
 FPS = 60
 
-#ставим разрешение окна игры
+# ставим разрешение окна игры
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pg.display.set_caption("Epic Tower Defense")
 
-#Сцена Главного меню
-def main_menu():
 
-    #Создание кнопок
-    levels_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 200, 252, 74, "Level Select", 'assets/textures/gui/buttons/rect/default@2x.png', 'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
-    quit_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 300, 252, 74, "Quit", 'assets/textures/gui/buttons/rect/default@2x.png', 'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+# Сцена Главного меню
+def main_menu():
+    # Создание кнопок
+    levels_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 200, 252, 74, "Level Select",
+                                'assets/textures/gui/buttons/rect/default@2x.png',
+                                'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+    quit_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 300, 252, 74, "Quit",
+                              'assets/textures/gui/buttons/rect/default@2x.png',
+                              'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
 
     menu_background = pg.image.load("assets/textures/menu.png")
 
     main_menu_run = True
     while main_menu_run:
         screen.blit(menu_background, (0, 0))
-
 
         # Название игры
         font = pg.font.Font(None, 72)
@@ -69,14 +73,19 @@ def main_menu():
 
         pg.display.flip()
 
-#Сцена Меню уровней
-def levels_menu():
 
-    #Создание кнопок
-    level1_button = ImageButton((SCREEN_WIDTH / 3) - 200, SCREEN_HEIGHT / 3, 200, 200, "1", 'assets/textures/gui/level/button/Unlocked@2x.png', '', 'assets/sound/button.wav')
-    level2_button = ImageButton((SCREEN_WIDTH / 2) - 100, SCREEN_HEIGHT / 3, 200, 200, "2", 'assets/textures/gui/level/button/Unlocked@2x.png', '', 'assets/sound/button.wav')
-    level3_button = ImageButton(SCREEN_WIDTH - (SCREEN_WIDTH / 3), SCREEN_HEIGHT / 3, 200, 200, "3", 'assets/textures/gui/level/button/Unlocked@2x.png', '', 'assets/sound/button.wav')
-    back_button = ImageButton(20, 645, 110, 110, "", 'assets/textures/gui/buttons/square/ArrowLeft-Thin/Default@2x.png', 'assets/textures/gui/buttons/square/ArrowLeft-Thin/Hover@2x.png', 'assets/sound/button.wav')
+# Сцена Меню уровней
+def levels_menu():
+    # Создание кнопок
+    level1_button = ImageButton((SCREEN_WIDTH / 3) - 200, SCREEN_HEIGHT / 3, 200, 200, "1",
+                                'assets/textures/gui/level/button/Unlocked@2x.png', '', 'assets/sound/button.wav')
+    level2_button = ImageButton((SCREEN_WIDTH / 2) - 100, SCREEN_HEIGHT / 3, 200, 200, "2",
+                                'assets/textures/gui/level/button/Unlocked@2x.png', '', 'assets/sound/button.wav')
+    level3_button = ImageButton(SCREEN_WIDTH - (SCREEN_WIDTH / 3), SCREEN_HEIGHT / 3, 200, 200, "3",
+                                'assets/textures/gui/level/button/Unlocked@2x.png', '', 'assets/sound/button.wav')
+    back_button = ImageButton(20, 645, 110, 110, "", 'assets/textures/gui/buttons/square/ArrowLeft-Thin/Default@2x.png',
+                              'assets/textures/gui/buttons/square/ArrowLeft-Thin/Hover@2x.png',
+                              'assets/sound/button.wav')
 
     menu_background = pg.image.load("assets/textures/menu.png")
 
@@ -97,15 +106,15 @@ def levels_menu():
                 sys.exit()
                 quit()
 
-            #Кнопка назад в главное меню и выход через эскейп
-            if (event.type == pg.USEREVENT and event.button == back_button) or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
+            # Кнопка назад в главное меню и выход через эскейп
+            if (event.type == pg.USEREVENT and event.button == back_button) or (
+                    event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 levels_menu_run = False
                 main_menu()
 
             if event.type == pg.USEREVENT and event.button == level1_button:
                 levels_menu_run = False
                 level1()
-
 
             for buttons in [level1_button, level2_button, level3_button, back_button]:
                 buttons.handle_event(event)
@@ -116,39 +125,107 @@ def levels_menu():
 
         pg.display.flip()
 
-#Сцена Первого уровня
-def level1():
 
-    #загрузка изображений
+def pause():
+    pause_width = SCREEN_WIDTH / 2
+    pause_height = SCREEN_HEIGHT - 100
+
+    # кнопки
+    levels_button = ImageButton(pause_width - 126, 300, 252, 74, "Level Select",
+                                'assets/textures/gui/buttons/rect/default@2x.png',
+                                'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+    quit_button = ImageButton(pause_width - 126, 400, 252, 74, "Quit",
+                              'assets/textures/gui/buttons/rect/default@2x.png',
+                              'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+    continue_button = ImageButton(pause_width - 126, 200, 252, 74, "Continue",
+                                  'assets/textures/gui/buttons/rect/default@2x.png',
+                                  'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+    # restart_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 200, 252, 74, "Restart",'assets/textures/gui/buttons/rect/default@2x.png','assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+
+    buttons_list = [levels_button, quit_button, continue_button]
+
+    # фон
+    p_background = pg.image.load("assets/textures/pause_background.png")
+
+    pause_menu_run = True
+
+    while pause_menu_run:
+        screen.blit(p_background, (SCREEN_WIDTH / 4, 50))
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pause_menu_run = False
+                pg.quit()
+                sys.exit()
+                quit()
+            if event.type == pg.USEREVENT and event.button == quit_button:
+                pause_menu_run = False
+                pg.quit()
+                sys.exit()
+                quit()
+
+            if event.type == pg.USEREVENT and event.button == levels_button:
+                pause_menu_run = False
+                levels_menu()
+
+            if event.type == pg.USEREVENT and event.button == continue_button:
+                pause_menu_run = False
+
+            if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                pause_menu_run = False
+
+            for buttons in buttons_list:
+                buttons.handle_event(event)
+
+        for buttons in buttons_list:
+            buttons.check_hover(pg.mouse.get_pos())
+            buttons.draw(screen)
+
+        pg.display.flip()
+
+
+# Сцена Первого уровня
+def level1():
+    # загрузка изображений
     enemy_image = pg.image.load('assets/textures/enemies/soldier.png').convert_alpha()
+    cannon_image = pg.image.load('assets/textures/towers/cannon/cannon1.png').convert_alpha()
     map_image = pg.image.load("assets/textures/maps/map1.png")
 
-    #чтение файла data
+    # чтение файла data
     file = open('assets/levels/level1/level1.tmj')
     world_data = json.load(file)
 
-    #создание мира
+    # функция создания турелей
+    def create_turret(mouse_pos):
+        mouse_tile_x = mouse_pos[0] // TILE_SIZE
+        mouse_tile_y = mouse_pos[1] // TILE_SIZE
+        cannon = Turret(cannon_image, mouse_pos, mouse_tile_x, mouse_tile_y)
+        turret_group.add(cannon)
+
+    # создание мира
     world = World(world_data, map_image)
     world.process_data()
 
-    #создание групп
+    # создание групп
     enemy_group = pg.sprite.Group()
     enemy = Enemy(world.waypoints, enemy_image)
     enemy_group.add(enemy)
+    turret_group = pg.sprite.Group()
 
     level1_run = True
     while level1_run:
 
         clock.tick(FPS)
 
+        screen.fill((150, 150, 150))
         world.draw(screen)
 
         enemy_group.update()
 
         enemy_group.draw(screen)
+        turret_group.draw(screen)
 
         pg.draw.lines(screen, "grey0", False, world.waypoints)
-        print(world.waypoints)
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 levels_menu_run = False
@@ -156,7 +233,17 @@ def level1():
                 sys.exit()
                 quit()
 
+            if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
+                mouse_pos = pg.mouse.get_pos()
+
+                if mouse_pos[0] < TILE_SIZE * ROWS and mouse_pos[1] < TILE_SIZE * COLS:
+                    create_turret(mouse_pos)
+
+            if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                pause()
+
         pg.display.flip()
 
-#Запуск главного меню
+
+# Запуск главного меню
 main_menu()
