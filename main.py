@@ -125,6 +125,71 @@ def levels_menu():
 
         pg.display.flip()
 
+<<<<<<< HEAD
+=======
+def pause():
+    pause_width = SCREEN_WIDTH / 2
+    pause_height = SCREEN_HEIGHT - 100
+
+    # кнопки
+    levels_button = ImageButton(pause_width -126, 300, 252, 74, "Level Select",
+                                'assets/textures/gui/buttons/rect/default@2x.png',
+                                'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+
+    quit_button = ImageButton(pause_width - 126, 400, 252, 74, "Quit",
+                              'assets/textures/gui/buttons/rect/default@2x.png',
+                              'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+
+    continue_button = ImageButton(pause_width - 126, 200, 252, 74, "Continue",
+                                  'assets/textures/gui/buttons/rect/default@2x.png',
+                                  'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+
+    # restart_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 200, 252, 74, "Restart",'assets/textures/gui/buttons/rect/default@2x.png','assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+
+    buttons_list = [levels_button, quit_button, continue_button]
+
+    # фон
+    p_background = pg.image.load("assets/textures/pause_background.png")
+
+    pause_menu_run = True
+
+    while pause_menu_run:
+        screen.blit(p_background, (SCREEN_WIDTH / 4, 50))
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pause_menu_run = False
+                pg.quit()
+                sys.exit()
+                quit()
+            if event.type == pg.USEREVENT and event.button == quit_button:
+                pause_menu_run = False
+                pg.quit()
+                sys.exit()
+                quit()
+
+            if event.type == pg.USEREVENT and event.button == levels_button:
+                pause_menu_run = False
+                levels_menu()
+
+            if event.type == pg.USEREVENT and event.button == continue_button:
+                pause_menu_run = False
+
+            if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                pause_menu_run = False
+
+            for buttons in buttons_list:
+                buttons.handle_event(event)
+
+        for buttons in buttons_list:
+            buttons.check_hover(pg.mouse.get_pos())
+            buttons.draw(screen)
+
+        pg.display.flip()
+
+#Сцена Первого уровня
+def level1():
+>>>>>>> 5f21fbf4573f13b91792396edb00f27eb7bf7bd5
 
 def pause():
     pause_width = SCREEN_WIDTH / 2
@@ -232,6 +297,8 @@ def level1():
                 pg.quit()
                 sys.exit()
                 quit()
+            if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                pause()
 
             if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
                 mouse_pos = pg.mouse.get_pos()
