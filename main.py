@@ -205,10 +205,19 @@ def level1():
         mouse_tile_x = mouse_pos[0] // TILE_SIZE
         mouse_tile_y = mouse_pos[1] // TILE_SIZE
 
+        #вычисляем порядковый номер клетки
         mouse_tile_num = (mouse_tile_y * COLS) + mouse_tile_x
+
+        #проверка, является ли данная клетка травой
         if world.tile_map[mouse_tile_num] == 9:
-            cannon = Turret(cannon_image, mouse_tile_x, mouse_tile_y)
-            turret_group.add(cannon)
+            #проверка, поставлена ли в клетке турель
+            space_is_free = True
+            for turret in turret_group:
+                if (mouse_tile_x, mouse_tile_y) == (turret.tile_x, turret.tile_y):
+                    space_is_free = False
+            if space_is_free == True:
+                cannon = Turret(cannon_image, mouse_tile_x, mouse_tile_y)
+                turret_group.add(cannon)
 
     # создание групп
     enemy_group = pg.sprite.Group()
@@ -228,7 +237,7 @@ def level1():
 
         enemy_group.draw(screen)
         turret_group.draw(screen)
-
+        print(turret_group)
         pg.draw.lines(screen, "grey0", False, world.waypoints)
         for event in pg.event.get():
             if event.type == pg.QUIT:
