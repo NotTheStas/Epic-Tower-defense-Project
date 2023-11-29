@@ -125,8 +125,6 @@ def levels_menu():
 
         pg.display.flip()
 
-<<<<<<< HEAD
-=======
 def pause():
     pause_width = SCREEN_WIDTH / 2
     pause_height = SCREEN_HEIGHT - 100
@@ -187,10 +185,6 @@ def pause():
 
         pg.display.flip()
 
-#Сцена Первого уровня
-def level1():
->>>>>>> 5f21fbf4573f13b91792396edb00f27eb7bf7bd5
-
 def pause():
     pause_width = SCREEN_WIDTH / 2
     pause_height = SCREEN_HEIGHT - 100
@@ -247,7 +241,6 @@ def pause():
             buttons.draw(screen)
 
         pg.display.flip()
-
 
 # Сцена Первого уровня
 def level1():

@@ -10,6 +10,9 @@ class World():
     def process_data(self):
         #заходим в файл уровня, чтобы достать нужную инфу
         for layer in self.level_data["layers"]:
+            if layer["name"] == "tilemap":
+                self.tile_map = layer["data"]
+                print(self.tile_map)
             if layer["name"] == "waypoints":
                 for obj in layer["objects"]:
                     waypoint_data = obj["polyline"]
