@@ -2,7 +2,7 @@ import pygame as pg
 
 class Turret(pg.sprite.Sprite):
 
-    def __init__(self, image, pos, tile_x, tile_y):
+    def __init__(self, image, tile_x, tile_y):
         pg.sprite.Sprite.__init__(self)
         self.tile_x = tile_x
         self.tile_y = tile_y

@@ -3,6 +3,7 @@ import pygame as pg
 class World():
 
     def __init__(self, data, map_image):
+        self.tile_map = []
         self.waypoints = []
         self.level_data = data
         self.image = map_image
@@ -10,10 +11,10 @@ class World():
     def process_data(self):
         #заходим в файл уровня, чтобы достать нужную инфу
         for layer in self.level_data["layers"]:
-            if layer["name"] == "tilemap":
+            if layer["name"] == "\u0421\u043b\u043e\u0439 \u0442\u0430\u0439\u043b\u043e\u0432 1":
                 self.tile_map = layer["data"]
                 print(self.tile_map)
-            if layer["name"] == "waypoints":
+            elif layer["name"] == "waypoints":
                 for obj in layer["objects"]:
                     waypoint_data = obj["polyline"]
                     x = obj["x"]
