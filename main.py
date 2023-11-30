@@ -1,6 +1,3 @@
-import pygame as pg
-import pygame.image
-import sys
 import json
 from enemy import *
 from menu import *
@@ -159,12 +156,11 @@ def pause():
                 pause_menu_run = False
                 pg.quit()
                 sys.exit()
-                quit()
+
             if event.type == pg.USEREVENT and event.button == quit_button:
                 pause_menu_run = False
                 pg.quit()
                 sys.exit()
-                quit()
 
             if event.type == pg.USEREVENT and event.button == levels_button:
                 pause_menu_run = False
@@ -179,7 +175,7 @@ def pause():
             for buttons in buttons_list:
                 buttons.handle_event(event)
 
-        for buttons in buttons_list:
+        for buttons in buttonsj_list:
             buttons.check_hover(pg.mouse.get_pos())
             buttons.draw(screen)
 
@@ -187,10 +183,19 @@ def pause():
 
 # Сцена Первого уровня
 def level1():
+
     # загрузка изображений
     enemy_image = pg.image.load('assets/textures/enemies/soldier.png').convert_alpha()
     cannon_image = pg.image.load('assets/textures/towers/cannon/cannon1.png').convert_alpha()
     map_image = pg.image.load("assets/textures/maps/map1.png")
+    battle_gui = pg.image.load("assets/textures/battle_gui.png")
+
+    #создание кнопок
+    turret1_button = ImageButton(768 + 40, 300, 125, 125, "", 'assets/textures/towers/cannon/cannon1.png', "", 'assets/sound/button.wav')
+    turret2_button = ImageButton(768 + 160, 300, 125, 125, "", 'assets/textures/towers/rocket/rockettower1.png', "", 'assets/sound/button.wav')
+    cancel_button = ImageButton(768 + 40, 400, 125, 125, "", 'assets/textures/towers/cannon/cannon1.png', "", 'assets/sound/button.wav')
+
+    buttons_list = [turret1_button, turret2_button, cancel_button]
 
     # чтение файла data
     file = open('assets/levels/level1/level1.tmj')
@@ -219,6 +224,7 @@ def level1():
                 cannon = Turret(cannon_image, mouse_tile_x, mouse_tile_y)
                 turret_group.add(cannon)
 
+    turret_placing = False
     # создание групп
     enemy_group = pg.sprite.Group()
     enemy = Enemy(world.waypoints, enemy_image)
@@ -230,14 +236,13 @@ def level1():
 
         clock.tick(FPS)
 
-        screen.fill((150, 150, 150))
+        screen.blit(battle_gui, (768, 0))
         world.draw(screen)
 
         enemy_group.update()
 
         enemy_group.draw(screen)
         turret_group.draw(screen)
-        print(turret_group)
         pg.draw.lines(screen, "grey0", False, world.waypoints)
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -252,10 +257,33 @@ def level1():
                 mouse_pos = pg.mouse.get_pos()
 
                 if mouse_pos[0] < TILE_SIZE * ROWS and mouse_pos[1] < TILE_SIZE * COLS:
-                    create_turret(mouse_pos)
+                    if turret_placing == True:
+                        create_turret(mouse_pos)
 
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 pause()
+
+            if event.type == pg.USEREVENT and event.button == turret1_button and turret_placing == False:
+                turret_placing = True
+                print("new_turret")
+
+            if event.type == pg.USEREVENT and event.button == cancel_button:
+                turret_placing = False
+                print("cancel")
+
+            for buttons in buttons_list:
+                buttons.handle_event(event)
+
+        for buttons in buttons_list:
+            buttons.check_hover(pg.mouse.get_pos())
+            turret1_button.draw(screen)
+            turret2_button.draw(screen)
+            if turret_placing == True:
+                cursor_rect = cannon_image.get_rect()
+                cursor_pos = pg.mouse.get_pos()
+                cursor_rect.center = cursor_pos
+                screen.blit(cannon_image, cursor_rect)
+                cancel_button.draw(screen)
 
         pg.display.flip()
 
