@@ -149,6 +149,7 @@ def pause():
     pause_menu_run = True
 
     while pause_menu_run:
+
         screen.blit(p_background, (SCREEN_WIDTH / 4, 50))
 
         for event in pg.event.get():
@@ -175,7 +176,7 @@ def pause():
             for buttons in buttons_list:
                 buttons.handle_event(event)
 
-        for buttons in buttonsj_list:
+        for buttons in buttons_list:
             buttons.check_hover(pg.mouse.get_pos())
             buttons.draw(screen)
 
@@ -187,6 +188,7 @@ def level1():
     # загрузка изображений
     enemy_image = pg.image.load('assets/textures/enemies/soldier.png').convert_alpha()
     cannon_image = pg.image.load('assets/textures/towers/cannon/cannon1.png').convert_alpha()
+    cannon_sheet = pg.image.load('assets/textures/towers/cannon/cannon1_1-sheet.png').convert_alpha()
     map_image = pg.image.load("assets/textures/maps/map1.png")
     battle_gui = pg.image.load("assets/textures/battle_gui.png")
 
@@ -221,10 +223,24 @@ def level1():
                 if (mouse_tile_x, mouse_tile_y) == (turret.tile_x, turret.tile_y):
                     space_is_free = False
             if space_is_free == True:
-                cannon = Turret(cannon_image, mouse_tile_x, mouse_tile_y)
+                cannon = Turret(cannon_sheet, 8, mouse_tile_x, mouse_tile_y)
                 turret_group.add(cannon)
 
+    def select_turret(mouse_pos):
+        mouse_tile_x = mouse_pos[0] // TILE_SIZE
+        mouse_tile_y = mouse_pos[1] // TILE_SIZE
+        for turret in turret_group:
+            if (mouse_tile_x, mouse_tile_y) == (turret.tile_x, turret.tile_y):
+                return turret
+
+    def clear_selection():
+        for turret in turret_group:
+            turret.selected = False
+
+    #переменные турелей
     turret_placing = False
+    selected_turret = None
+
     # создание групп
     enemy_group = pg.sprite.Group()
     enemy = Enemy(world.waypoints, enemy_image)
@@ -239,17 +255,24 @@ def level1():
         screen.blit(battle_gui, (768, 0))
         world.draw(screen)
 
+        #обновление групп
         enemy_group.update()
+        turret_group.update()
 
+        #подсветка выбранной турели
+        if selected_turret:
+            selected_turret.selected = True
+        #отрисовка групп
         enemy_group.draw(screen)
-        turret_group.draw(screen)
-        pg.draw.lines(screen, "grey0", False, world.waypoints)
+        for turret in turret_group:
+            turret.draw(screen)
+
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 levels_menu_run = False
                 pg.quit()
                 sys.exit()
-                quit()
+
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 pause()
 
@@ -257,11 +280,14 @@ def level1():
                 mouse_pos = pg.mouse.get_pos()
 
                 if mouse_pos[0] < TILE_SIZE * ROWS and mouse_pos[1] < TILE_SIZE * COLS:
+                    # убираем выбранные турели
+                    selected_turret = None
+                    clear_selection()
                     if turret_placing == True:
                         create_turret(mouse_pos)
+                    else:
+                        selected_turret = select_turret(mouse_pos)
 
-            if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                pause()
 
             if event.type == pg.USEREVENT and event.button == turret1_button and turret_placing == False:
                 turret_placing = True
@@ -282,7 +308,8 @@ def level1():
                 cursor_rect = cannon_image.get_rect()
                 cursor_pos = pg.mouse.get_pos()
                 cursor_rect.center = cursor_pos
-                screen.blit(cannon_image, cursor_rect)
+                if cursor_pos[0] <= SCREEN_HEIGHT:
+                    screen.blit(cannon_image, cursor_rect)
                 cancel_button.draw(screen)
 
         pg.display.flip()
