@@ -293,7 +293,7 @@ def level1():
                 turret_placing = True
                 print("new_turret")
 
-            if event.type == pg.USEREVENT and event.button == cancel_button:
+            if (event.type == pg.USEREVENT and event.button == cancel_button) or (event.type == pg.MOUSEBUTTONDOWN and event.button == 3):
                 turret_placing = False
                 print("cancel")
 
