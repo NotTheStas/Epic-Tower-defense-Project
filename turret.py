@@ -79,7 +79,7 @@ class Turret(pg.sprite.Sprite):
         #обновляем изображение покадрово
         self.original_image = self.animation_list[self.frame_index]
         #достаточно ли времени прошло с предыдущего кадра
-        if pg.time.get_ticks() - self.update_time > 25:
+        if pg.time.get_ticks() - self.update_time > 15:
             self.update_time = pg.time.get_ticks()
             self.frame_index += 1
             #проверить, завершена ли анимация

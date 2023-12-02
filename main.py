@@ -26,8 +26,6 @@ screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pg.display.set_caption("Epic Tower Defense")
 
 
-
-
 # Сцена Главного меню
 def main_menu():
     # Создание кнопок
@@ -121,6 +119,7 @@ def levels_menu():
 
         pg.display.flip()
 
+
 def pause():
     pause_width = SCREEN_WIDTH / 2
     pause_height = SCREEN_HEIGHT - 100
@@ -179,9 +178,9 @@ def pause():
 
         pg.display.flip()
 
+
 # Сцена Первого уровня
 def level1():
-
     # загрузка изображений
     enemy_image = pg.image.load('assets/textures/enemies/soldier.png').convert_alpha()
     cannon_image = pg.image.load('assets/textures/towers/cannon/cannon1.png').convert_alpha()
@@ -193,11 +192,18 @@ def level1():
     map_image = pg.image.load("assets/textures/maps/map1.png")
     battle_gui = pg.image.load("assets/textures/battle_gui.png")
 
-    #создание кнопок
-    turret1_button = ImageButton(768 + 40, 300, 125, 125, "", 'assets/textures/towers/cannon/cannon1.png', "", 'assets/sound/button.wav')
-    turret2_button = ImageButton(768 + 160, 300, 125, 125, "", 'assets/textures/towers/rocket/rockettower1.png', "", 'assets/sound/button.wav')
-    cancel_button = ImageButton(768 + 40, 400, 125, 125, "", 'assets/textures/towers/cannon/cannon1.png', "", 'assets/sound/button.wav')
-    upgrade_button = ImageButton(768 + 160, 400, 125, 125, "", 'assets/textures/towers/cannon/cannon1.png', "", 'assets/sound/button.wav')
+    # создание кнопок
+    turret1_button = ImageButton(768 + 45, 250, 105, 105, "", 'assets/textures/gui/button/icon/cannon1_iconDefault.png',
+                                 "assets/textures/gui/button/icon/cannon1_iconHover.png", 'assets/sound/button.wav')
+    turret2_button = ImageButton(768 + 170, 250, 105, 105, "",
+                                 'assets/textures/gui/button/icon/rocket1_iconDefault.png',
+                                 "assets/textures/gui/button/icon/rocket1_iconHover.png", 'assets/sound/button.wav')
+    cancel_button = ImageButton(768 + 45, 400, 230, 45, "Cancel",
+                                'assets/textures/gui/buttons/rect/cancel_buttonDefault.png',
+                                "assets/textures/gui/buttons/rect/cancel_buttonHover.png", 'assets/sound/button.wav')
+    upgrade_button = ImageButton(768 + 45, 460, 230, 45, "Upgrade",
+                                 'assets/textures/gui/buttons/rect/upgrade_buttonDefault.png',
+                                 "assets/textures/gui/buttons/rect/upgrade_buttonHover.png", 'assets/sound/button.wav')
 
     buttons_list = [turret1_button, turret2_button, cancel_button, upgrade_button]
 
@@ -214,12 +220,12 @@ def level1():
         mouse_tile_x = mouse_pos[0] // TILE_SIZE
         mouse_tile_y = mouse_pos[1] // TILE_SIZE
 
-        #вычисляем порядковый номер клетки
+        # вычисляем порядковый номер клетки
         mouse_tile_num = (mouse_tile_y * COLS) + mouse_tile_x
 
-        #проверка, является ли данная клетка травой
+        # проверка, является ли данная клетка травой
         if world.tile_map[mouse_tile_num] == 9:
-            #проверка, поставлена ли в клетке турель
+            # проверка, поставлена ли в клетке турель
             space_is_free = True
             for turret in turret_group:
                 if (mouse_tile_x, mouse_tile_y) == (turret.tile_x, turret.tile_y):
@@ -239,7 +245,7 @@ def level1():
         for turret in turret_group:
             turret.selected = False
 
-    #переменные турелей
+    # переменные турелей
     turret_placing = False
     selected_turret = None
 
@@ -254,19 +260,19 @@ def level1():
 
         clock.tick(FPS)
 
-        #обновление групп
+        # обновление групп
         enemy_group.update()
         turret_group.update(enemy_group)
 
-        #подсветка выбранной турели
+        # подсветка выбранной турели
         if selected_turret:
             selected_turret.selected = True
 
-        #отрисовка экрана
+        # отрисовка экрана
         screen.blit(battle_gui, (768, 0))
         world.draw(screen)
 
-        #отрисовка групп
+        # отрисовка групп
         enemy_group.draw(screen)
         for turret in turret_group:
             turret.draw(screen)
@@ -317,11 +323,11 @@ def level1():
                 if cursor_pos[0] <= SCREEN_HEIGHT:
                     screen.blit(cannon_image, cursor_rect)
                 cancel_button.draw(screen)
-            if selected_turret:
+            if selected_turret and selected_turret.upgrade_level < TURRET_LEVELS:
                 upgrade_button.draw(screen)
 
-
         pg.display.flip()
+
 
 # Запуск главного меню
 main_menu()
