@@ -18,7 +18,7 @@ COLS = 12
 TILE_SIZE = 64
 SCREEN_WIDTH = 1088
 SCREEN_HEIGHT = 768
-FPS = 60
+FPS = 120
 TURRET_LEVELS = 3
 SPAWN_COOLDOWN = 400
 BASE_HEALTH = 10
@@ -207,7 +207,9 @@ def level1():
         "heavy_soldier": pg.image.load("assets/textures/enemies/heavy_soldier.png").convert_alpha(),
         "runner": pg.image.load("assets/textures/enemies/runner.png").convert_alpha(),
         "robot": pg.image.load("assets/textures/enemies/robot.png").convert_alpha(),
-        "light_robot": pg.image.load("assets/textures/enemies/light_robot.png").convert_alpha()
+        "light_robot": pg.image.load("assets/textures/enemies/light_robot.png").convert_alpha(),
+        "light_tank": pg.image.load("assets/textures/enemies/light_tank1.png").convert_alpha(),
+        "heavy_tank": pg.image.load("assets/textures/enemies/heavy_tank1.png").convert_alpha()
     }
 
     cannon_image = pg.image.load('assets/textures/towers/cannon/cannon1.png').convert_alpha()

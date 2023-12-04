@@ -18,7 +18,15 @@ ENEMY_DATA = {
     "light_robot": {
     "health": 30,
     "speed": 2
-  }
+  },
+  "light_tank": {
+    "health": 120,
+    "speed": 1.2
+  },
+  "heavy_tank": {
+    "health": 250,
+    "speed": 1
+  },
 }
 
 LEVEL1_WAVE_DATA = [
@@ -28,7 +36,9 @@ LEVEL1_WAVE_DATA = [
     "heavy_soldier": 0,
     "runner": 0,
     "light_robot": 0,
-    "robot": 0
+    "robot": 0,
+    "light_tank": 1,
+    "heavy_tank": 0
   },
   {
     #2
@@ -36,7 +46,9 @@ LEVEL1_WAVE_DATA = [
     "heavy_soldier": 4,
     "runner": 0,
     "light_robot": 0,
-    "robot": 0
+    "robot": 0,
+    "light_tank": 0,
+    "heavy_tank": 2
   },
   {
     #3
@@ -44,7 +56,9 @@ LEVEL1_WAVE_DATA = [
     "heavy_soldier": 0,
     "runner": 0,
     "light_robot": 5,
-    "robot": 0
+    "robot": 0,
+    "light_tank": 5,
+    "heavy_tank": 5
   },
   {
     #4
@@ -52,7 +66,9 @@ LEVEL1_WAVE_DATA = [
     "heavy_soldier": 0,
     "runner": 5,
     "light_robot": 5,
-    "robot": 0
+    "robot": 0,
+    "light_tank": 0,
+    "heavy_tank": 0
   },
   {
     #5
@@ -60,7 +76,9 @@ LEVEL1_WAVE_DATA = [
     "heavy_soldier": 0,
     "runner": 10,
     "light_robot": 0,
-    "robot": 0
+    "robot": 0,
+    "light_tank": 0,
+    "heavy_tank": 0
   },
   {
     #6
@@ -68,7 +86,9 @@ LEVEL1_WAVE_DATA = [
     "heavy_soldier": 5,
     "runner": 10,
     "light_robot": 0,
-    "robot": 0
+    "robot": 0,
+    "light_tank": 0,
+    "heavy_tank": 10
   },
   {
     #7
@@ -76,7 +96,9 @@ LEVEL1_WAVE_DATA = [
     "heavy_soldier": 15,
     "runner": 0,
     "light_robot": 0,
-    "robot": 0
+    "robot": 0,
+    "light_tank": 0,
+    "heavy_tank": 0
   },
   {
     #8
@@ -84,7 +106,9 @@ LEVEL1_WAVE_DATA = [
     "heavy_soldier": 0,
     "runner": 0,
     "light_robot": 10,
-    "robot": 5
+    "robot": 0,
+    "light_tank": 0,
+    "heavy_tank": 0
   },
   {
     #9
@@ -92,7 +116,9 @@ LEVEL1_WAVE_DATA = [
     "heavy_soldier": 0,
     "runner": 0,
     "light_robot": 0,
-    "robot": 10
+    "robot": 0,
+    "light_tank": 0,
+    "heavy_tank": 0
   },
   {
     #10
@@ -100,7 +126,9 @@ LEVEL1_WAVE_DATA = [
     "heavy_soldier": 5,
     "runner": 0,
     "light_robot": 0,
-    "robot": 15
+    "robot": 0,
+    "light_tank": 0,
+    "heavy_tank": 0
   },
   {
     #11
@@ -108,7 +136,9 @@ LEVEL1_WAVE_DATA = [
     "heavy_soldier": 0,
     "runner": 10,
     "light_robot": 0,
-    "robot": 10
+    "robot": 0,
+    "light_tank": 0,
+    "heavy_tank": 0
   },
   {
     #12
@@ -116,7 +146,9 @@ LEVEL1_WAVE_DATA = [
     "heavy_soldier": 0,
     "runner": 0,
     "light_robot": 10,
-    "robot": 20
+    "robot": 0,
+    "light_tank": 0,
+    "heavy_tank": 0
   },
   {
     #13
@@ -124,7 +156,9 @@ LEVEL1_WAVE_DATA = [
     "heavy_soldier": 0,
     "runner": 10,
     "light_robot": 0,
-    "robot": 20
+    "robot": 0,
+    "light_tank": 0,
+    "heavy_tank": 0
   },
   {
     #14
@@ -132,7 +166,9 @@ LEVEL1_WAVE_DATA = [
     "heavy_soldier": 0,
     "runner": 0,
     "light_robot": 10,
-    "robot": 20
+    "robot": 0,
+    "light_tank": 0,
+    "heavy_tank": 0
   },
   {
     #15
@@ -140,6 +176,8 @@ LEVEL1_WAVE_DATA = [
     "heavy_soldier": 25,
     "runner": 25,
     "light_robot": 25,
-    "robot": 25
+    "robot": 0,
+    "light_tank": 0,
+    "heavy_tank": 0
   }
 ]
