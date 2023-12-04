@@ -233,9 +233,9 @@ def level1():
     upgrade_button = ImageButton(768 + 45, 460, 230, 45, "Upgrade",
                                  'assets/textures/gui/buttons/rect/upgrade_buttonDefault.png',
                                  "assets/textures/gui/buttons/rect/upgrade_buttonHover.png", 'assets/sound/button.wav')
-    begin_button = ImageButton(768 + 45, 520, 230, 45, "Upgrade",
-                                 'assets/textures/gui/buttons/rect/upgrade_buttonDefault.png',
-                                 "assets/textures/gui/buttons/rect/upgrade_buttonHover.png", 'assets/sound/button.wav')
+    begin_button = ImageButton(768 + 45, 520, 230, 45, "Begin Wave",
+                                 'assets/textures/gui/buttons/rect/begin_buttonDefault.png',
+                                 "assets/textures/gui/buttons/rect/begin_buttonHover.png", 'assets/sound/button.wav')
 
     buttons_list = [turret1_button, turret2_button, cancel_button, upgrade_button, begin_button]
 
@@ -338,6 +338,8 @@ def level1():
                     enemy_group.add(enemy)
                     world.spawned_enemies += 1
                     last_enemy_spawn = pg.time.get_ticks()
+        else:
+            begin_button.draw(screen)
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -379,15 +381,6 @@ def level1():
                 if event.type == pg.USEREVENT and event.button == begin_button:
                     wave_started = True
 
-            # проверка, закончена ли волна
-            if world.check_wave_complete() == True:
-                world.money += LEVEL_COMPLETE_REWARD
-                world.wave += 1
-                wave_started = False
-                last_enemy_spawn = pg.time.get_ticks()
-                world.reset_wave()
-                world.process_enemies()
-
             for buttons in buttons_list:
                 buttons.handle_event(event)
 
@@ -404,8 +397,15 @@ def level1():
                 cancel_button.draw(screen)
             if selected_turret and selected_turret.upgrade_level < TURRET_LEVELS:
                 upgrade_button.draw(screen)
-            if wave_started == False:
-                begin_button.draw(screen)
+
+        # проверка, закончена ли волна
+        if world.check_wave_complete() == True:
+            world.money += LEVEL_COMPLETE_REWARD
+            world.wave += 1
+            wave_started = False
+            last_enemy_spawn = pg.time.get_ticks()
+            world.reset_wave()
+            world.process_enemies()
 
         pg.display.flip()
 
