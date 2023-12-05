@@ -5,30 +5,13 @@ from enemy import Enemy
 from menu import ImageButton
 from world import World
 from turret import Turret
+from constants import *
 
 # инициализация pygame
 pg.init()
 
 # создание clock
 clock = pg.time.Clock()
-
-# переменные
-ROWS = 12
-COLS = 12
-TILE_SIZE = 64
-SCREEN_WIDTH = 1088
-SCREEN_HEIGHT = 768
-FPS = 120
-TURRET_LEVELS = 3
-SPAWN_COOLDOWN = 400
-BASE_HEALTH = 10
-MONEY = 2500
-BUY_COST = 150
-UPGRADE_COST = 150
-DAMAGE = 20
-KILL_REWARD = 15
-LEVEL_COMPLETE_REWARD = 150
-TOTAL_WAVES = 15
 
 # ставим разрешение окна игры
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -264,7 +247,7 @@ def level1():
                 if (mouse_tile_x, mouse_tile_y) == (turret.tile_x, turret.tile_y):
                     space_is_free = False
             if space_is_free == True:
-                cannon = Turret(cannon_spritesheets, mouse_tile_x, mouse_tile_y)
+                cannon = Turret(cannon_spritesheets, mouse_tile_x, mouse_tile_y, turret_id)
                 turret_group.add(cannon)
                 world.money -= BUY_COST
 
@@ -325,9 +308,9 @@ def level1():
         for turret in turret_group:
             turret.draw(screen)
 
-        draw_text(str(world.health), text_font, "grey100", 0, 0)
-        draw_text(str(world.money), text_font, "grey100", 0, 30)
-        draw_text(str(world.wave), text_font, "grey100", 0, 60)
+        draw_text(str(world.health), text_font, "grey100", 786+60, 60)
+        draw_text(str(world.money), text_font, "grey100", 786+60, 90)
+        draw_text(str(world.wave), text_font, "grey100", 786+60, 120)
 
         #спавн врагов
         if wave_started == True:
@@ -347,10 +330,13 @@ def level1():
                 pg.quit()
 
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                turret1_button.draw(screen)
+                turret2_button.draw(screen)
+                if turret_placing:
+                    cancel_button.draw(screen)
+                if selected_turret and selected_turret.upgrade_level < TURRET_LEVELS:
+                    upgrade_button.draw(screen)
                 pause()
-
-            if event.type == pg.USEREVENT and event.button == turret1_button and turret_placing == False:
-                turret_placing = True
 
             if (event.type == pg.USEREVENT and event.button == cancel_button) or (
                     event.type == pg.MOUSEBUTTONDOWN and event.button == 3):
@@ -375,6 +361,11 @@ def level1():
                             create_turret(mouse_pos)
                     else:
                         selected_turret = select_turret(mouse_pos)
+
+            if event.type == pg.USEREVENT and event.button == turret1_button and turret_placing == False:
+                turret_id = 1
+                turret_placing = True
+
 
             # проверка, начата ли волна
             if wave_started == False:

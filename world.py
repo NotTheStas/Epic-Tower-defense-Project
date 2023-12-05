@@ -24,7 +24,7 @@ class World():
         for layer in self.level_data["layers"]:
             if layer["name"] == "\u0421\u043b\u043e\u0439 \u0442\u0430\u0439\u043b\u043e\u0432 1":
                 self.tile_map = layer["data"]
-                print(self.tile_map)
+
             elif layer["name"] == "waypoints":
                 for obj in layer["objects"]:
                     waypoint_data = obj["polyline"]
