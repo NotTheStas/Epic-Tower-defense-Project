@@ -1,7 +1,7 @@
 import pygame as pg
 from enemy import *
 import random
-
+from constants import *
 
 class World():
 
@@ -9,8 +9,8 @@ class World():
         self.wave = 1
         self.tile_map = []
         self.waypoints = []
-        self.health = 20
-        self.money = 600
+        self.health = BASE_HEALTH
+        self.money = MONEY
         self.level_data = data
         self.image = map_image
         self.enemy_list = []

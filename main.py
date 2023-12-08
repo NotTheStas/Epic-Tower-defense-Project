@@ -21,9 +21,11 @@ pg.display.set_caption("Epic Tower Defense")
 text_font = pg.font.SysFont("Consolas", 24, bold=True)
 large_font = pg.font.SysFont("Consolas", 36)
 
+
 def draw_text(text, font, text_col, x, y):
     img = font.render(text, True, text_col)
     screen.blit(img, (x, y))
+
 
 # Сцена Главного меню
 def main_menu():
@@ -195,12 +197,17 @@ def level1():
         "heavy_tank": pg.image.load("assets/textures/enemies/heavy_tank1.png").convert_alpha()
     }
 
-    cannon_image = pg.image.load('assets/textures/towers/cannon/cannon1.png').convert_alpha()
-    cannon_sheet = pg.image.load('assets/textures/towers/cannon/cannon1_sheet.png').convert_alpha()
-    cannon_spritesheets = []
+    turrets_spritesheets = [[], []]
+    turrets_images = turret1_image = [pg.image.load('assets/textures/towers/cannon/cannon1.png').convert_alpha(),
+                                      pg.image.load('assets/textures/towers/rocket/rockettower1.png').convert_alpha()]
     for x in range(1, TURRET_LEVELS + 1):
-        cannon_sheet = pg.image.load(f'assets/textures/towers/cannon/cannon{x}_sheet.png').convert_alpha()
-        cannon_spritesheets.append(cannon_sheet)
+        turret1_sheet = pg.image.load(f'assets/textures/towers/cannon/cannon{x}_sheet.png').convert_alpha()
+        turret2_sheet = pg.image.load(f'assets/textures/towers/rocket/rockettower{x}_sheet.png').convert_alpha()
+        turrets_spritesheets[0].append(turret1_sheet)
+        turrets_spritesheets[1].append(turret2_sheet)
+    print(turrets_spritesheets)
+
+
     map_image = pg.image.load("assets/textures/maps/map1.png")
     battle_gui = pg.image.load("assets/textures/battle_gui.png")
 
@@ -217,8 +224,8 @@ def level1():
                                  'assets/textures/gui/buttons/rect/upgrade_buttonDefault.png',
                                  "assets/textures/gui/buttons/rect/upgrade_buttonHover.png", 'assets/sound/button.wav')
     begin_button = ImageButton(768 + 45, 520, 230, 45, "Begin Wave",
-                                 'assets/textures/gui/buttons/rect/begin_buttonDefault.png',
-                                 "assets/textures/gui/buttons/rect/begin_buttonHover.png", 'assets/sound/button.wav')
+                               'assets/textures/gui/buttons/rect/begin_buttonDefault.png',
+                               "assets/textures/gui/buttons/rect/begin_buttonHover.png", 'assets/sound/button.wav')
 
     buttons_list = [turret1_button, turret2_button, cancel_button, upgrade_button, begin_button]
 
@@ -247,8 +254,8 @@ def level1():
                 if (mouse_tile_x, mouse_tile_y) == (turret.tile_x, turret.tile_y):
                     space_is_free = False
             if space_is_free == True:
-                cannon = Turret(cannon_spritesheets, mouse_tile_x, mouse_tile_y, turret_id)
-                turret_group.add(cannon)
+                turret = Turret(turrets_spritesheets[turret_id - 1], mouse_tile_x, mouse_tile_y, turret_id)
+                turret_group.add(turret)
                 world.money -= BUY_COST
 
     def select_turret(mouse_pos):
@@ -264,7 +271,7 @@ def level1():
 
     # игровые переменные
     game_over = False
-    game_outcome = 0 # -1 если поражение 1 если победа
+    game_outcome = 0  # -1 если поражение 1 если победа
     last_enemy_spawn = pg.time.get_ticks()
     turret_placing = False
     selected_turret = None
@@ -280,15 +287,15 @@ def level1():
         clock.tick(FPS)
 
         if game_over == False:
-            #проверить, проиграл ли игрок
+            # проверить, проиграл ли игрок
             if world.health <= 0:
                 game_over = True
-                game_outcome = -1 #проигрыш
+                game_outcome = -1  # проигрыш
                 ###################game_over_menu()
-            #проверить, победил ли игрок ли игрок
+            # проверить, победил ли игрок ли игрок
             if world.wave > TOTAL_WAVES:
                 game_over = True
-                game_outcome = 1 #выигрыш
+                game_outcome = 1  # выигрыш
                 ###################game_win_menu()
 
         # обновление групп
@@ -308,11 +315,11 @@ def level1():
         for turret in turret_group:
             turret.draw(screen)
 
-        draw_text(str(world.health), text_font, "grey100", 786+60, 60)
-        draw_text(str(world.money), text_font, "grey100", 786+60, 90)
-        draw_text(str(world.wave), text_font, "grey100", 786+60, 120)
+        draw_text(str(world.health), text_font, "grey100", 786 + 60, 60)
+        draw_text(str(world.money), text_font, "grey100", 786 + 60, 90)
+        draw_text(str(world.wave), text_font, "grey100", 786 + 60, 120)
 
-        #спавн врагов
+        # спавн врагов
         if wave_started == True:
             if pg.time.get_ticks() - last_enemy_spawn > SPAWN_COOLDOWN:
                 if world.spawned_enemies < len(world.enemy_list):
@@ -366,6 +373,9 @@ def level1():
                 turret_id = 1
                 turret_placing = True
 
+            if event.type == pg.USEREVENT and event.button == turret2_button and turret_placing == False:
+                turret_id = 2
+                turret_placing = True
 
             # проверка, начата ли волна
             if wave_started == False:
@@ -380,11 +390,11 @@ def level1():
             turret1_button.draw(screen)
             turret2_button.draw(screen)
             if turret_placing:
-                cursor_rect = cannon_image.get_rect()
+                cursor_rect = turrets_images[turret_id - 1].get_rect()
                 cursor_pos = pg.mouse.get_pos()
                 cursor_rect.center = cursor_pos
                 if cursor_pos[0] <= SCREEN_HEIGHT:
-                    screen.blit(cannon_image, cursor_rect)
+                    screen.blit(turrets_images[turret_id - 1], cursor_rect)
                 cancel_button.draw(screen)
             if selected_turret and selected_turret.upgrade_level < TURRET_LEVELS:
                 upgrade_button.draw(screen)

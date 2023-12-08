@@ -11,7 +11,7 @@ class Turret(pg.sprite.Sprite):
         self.type = turret_id
         self.range = TURRET_DATA.get(f"turret{self.type}")[self.upgrade_level - 1].get('range')
         self.cooldown = TURRET_DATA.get(f"turret{self.type}")[self.upgrade_level - 1].get('cooldown')
-        self.animation_steps = TURRET_DATA.get(f"turret{self.type}")[self.upgrade_level - 1].get('animation_steps')
+        self.animation_steps = TURRET_DATA.get(f"turret{self.type}")[self.upgrade_level - 1].get('animation_steps') - 1
         self.last_shot = pg.time.get_ticks()
         self.selected = False
         self.target = None
@@ -96,7 +96,7 @@ class Turret(pg.sprite.Sprite):
         self.upgrade_level += 1
         self.range = TURRET_DATA.get(f"turret{self.type}")[self.upgrade_level - 1].get('range')
         self.cooldown = TURRET_DATA.get(f"turret{self.type}")[self.upgrade_level - 1].get('cooldown')
-        self.animation_steps = TURRET_DATA.get(f"turret{self.type}")[self.upgrade_level - 1].get('animation_steps')
+        self.animation_steps = TURRET_DATA.get(f"turret{self.type}")[self.upgrade_level - 1].get('animation_steps') - 1
 
         # обновляем изображение турели
         self.animation_list = self.load_images(self.sprite_sheets[self.upgrade_level - 1])
