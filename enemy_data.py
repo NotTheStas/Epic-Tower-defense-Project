@@ -21,7 +21,7 @@ ENEMY_DATA = {
   },
   "light_tank": {
     "health": 120,
-    "speed": 6
+    "speed": 1.5
   },
   "heavy_tank": {
     "health": 250,

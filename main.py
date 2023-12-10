@@ -378,13 +378,13 @@ def level1():
             turret.draw(screen)
 
         # отрисовка хп, денег, волны, интерфейса
+        screen.blit(battle_gui, (768, 0))
         draw_text(str(world.health), text_font, "grey100", 786 + 50, 50)
         draw_text(str(world.money), text_font, "grey100", 786 + 50, 85)
         draw_text(str(world.wave) + "/15", text_font, "grey100", 786 + 50, 120)
         screen.blit(heart_icon, (786 + 18, 50-3))
         screen.blit(coin_icon, (786 + 18, 85-3))
         screen.blit(wave_icon, (786 + 18, 120-3))
-        screen.blit(battle_gui, (768, 0))
 
         # спавн врагов
         if wave_started == True:
