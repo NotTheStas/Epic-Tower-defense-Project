@@ -5,10 +5,11 @@ import math
 
 class Turret(pg.sprite.Sprite):
 
-    def __init__(self, sprite_sheets, tile_x, tile_y, turret_id):
+    def __init__(self, sprite_sheets, tile_x, tile_y, turret_id, sound):
         pg.sprite.Sprite.__init__(self)
         self.upgrade_level = 1
         self.type = turret_id
+        self.shoot_sound = sound
         self.range = TURRET_DATA.get(f"turret{self.type}")[self.upgrade_level - 1].get('range')
         self.cooldown = TURRET_DATA.get(f"turret{self.type}")[self.upgrade_level - 1].get('cooldown')
         self.animation_steps = TURRET_DATA.get(f"turret{self.type}")[self.upgrade_level - 1].get('animation_steps') - 1
@@ -77,6 +78,7 @@ class Turret(pg.sprite.Sprite):
                     self.target = enemy
                     self.angle = math.degrees(math.atan2(-y_dist, x_dist))
                     self.target.health -= 5
+                    self.shoot_sound.play()
                     break
 
     def play_animation(self):

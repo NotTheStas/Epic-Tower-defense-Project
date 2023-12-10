@@ -255,8 +255,8 @@ def level1():
     }
 
     turrets_spritesheets = [[], []]
-    turrets_images = turret1_image = [pg.image.load('assets/textures/towers/cannon/cannon1.png').convert_alpha(),
-                                      pg.image.load('assets/textures/towers/rocket/rockettower1.png').convert_alpha()]
+    turrets_images = [pg.image.load('assets/textures/towers/cannon/cannon1.png').convert_alpha(), pg.image.load('assets/textures/towers/rocket/rockettower1.png').convert_alpha()]
+    turret_sounds = [pg.mixer.Sound("assets/sound/cannon.wav"), pg.mixer.Sound("assets/sound/rocket.wav")]
     for x in range(1, TURRET_LEVELS + 1):
         turret1_sheet = pg.image.load(f'assets/textures/towers/cannon/cannon{x}_sheet.png').convert_alpha()
         turret2_sheet = pg.image.load(f'assets/textures/towers/rocket/rockettower{x}_sheet.png').convert_alpha()
@@ -316,7 +316,7 @@ def level1():
                 if (mouse_tile_x, mouse_tile_y) == (turret.tile_x, turret.tile_y):
                     space_is_free = False
             if space_is_free == True:
-                turret = Turret(turrets_spritesheets[turret_id - 1], mouse_tile_x, mouse_tile_y, turret_id)
+                turret = Turret(turrets_spritesheets[turret_id - 1], mouse_tile_x, mouse_tile_y, turret_id, turret_sounds[turret_id - 1])
                 turret_group.add(turret)
                 world.money -= TURRET_COST[turret_id - 1]
 
