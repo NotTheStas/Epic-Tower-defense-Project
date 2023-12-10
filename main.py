@@ -5,6 +5,7 @@ from enemy import Enemy
 from menu import ImageButton
 from world import World
 from turret import Turret
+from turret_data import TURRET_COST
 from constants import *
 
 # инициализация pygame
@@ -180,7 +181,63 @@ def pause():
         pg.display.flip()
 
 
-####def game_over_menu():
+# Сцена Меню Проигрыша
+def game_over_menu1(level):
+    restart_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 200, 252, 74, "Restart",
+                                 'assets/textures/gui/buttons/rect/default@2x.png',
+                                 'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+    to_main_menu_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 300, 252, 74, "Main menu",
+                                  'assets/textures/gui/buttons/rect/default@2x.png',
+                                  'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+    to_levels_menu_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 400, 252, 74, "Level Select",
+                                 'assets/textures/gui/buttons/rect/default@2x.png',
+                                 'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+    buttons_list = [restart_button, to_main_menu_button, to_levels_menu_button]
+
+    menu_back = pg.image.load("assets/textures/menu.png")
+
+    game_over_run = True
+    while game_over_run:
+        screen.blit(menu_back, (0, 0))
+
+        font = pg.font.Font(None, 72)
+        text_surface = font.render("Ты проиграл", True, (255, 255, 255))
+        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH / 2, 100))
+        screen.blit(text_surface, text_rect)
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                game_over_run = False
+                pg.quit()
+
+            if event.type == pg.USEREVENT and event.button == restart_button and level == 1:
+                game_over_run = False
+                level1()
+            #if event.type == pg.USEREVENT and event.button == restart_button and level == 2:
+            #   game_over_run = False
+            #   level2()
+            #if event.type == pg.USEREVENT and event.button == restart_button and level == 3:
+            #    game_over_run = False
+            #    level3()
+
+            if event.type == pg.USEREVENT and event.button == to_main_menu_button:
+                game_over_run = False
+                main_menu()
+
+            if event.type == pg.USEREVENT and event.button == to_levels_menu_button:
+                game_over_run = False
+                levels_menu()
+
+            for buttons in buttons_list:
+                buttons.handle_event(event)
+
+        for buttons in buttons_list:
+            buttons.check_hover(pg.mouse.get_pos())
+            buttons.draw(screen)
+
+        pg.display.flip()
+
+
 
 ####def game_win_menu():
 
@@ -207,7 +264,7 @@ def level1():
         turrets_spritesheets[1].append(turret2_sheet)
     print(turrets_spritesheets)
 
-    map_image = pg.image.load("assets/textures/maps/map1.png")
+    map_image = pg.image.load("assets/textures/maps/map2.png")
     battle_gui = pg.image.load("assets/textures/battle_gui.png")
     coin_icon = pg.image.load("assets/textures/gui/battle/coin.png").convert_alpha()
     heart_icon = pg.image.load("assets/textures/gui/battle/heart.png").convert_alpha()
@@ -235,7 +292,7 @@ def level1():
     buttons_list = [turret1_button, turret2_button, cancel_button, upgrade_button, begin_button, speedup_button]
 
     # чтение файла data
-    file = open('assets/levels/level1/level1.tmj')
+    file = open('assets/levels/level2/level2.tmj')
     world_data = json.load(file)
 
     # создание мира
@@ -261,7 +318,7 @@ def level1():
             if space_is_free == True:
                 turret = Turret(turrets_spritesheets[turret_id - 1], mouse_tile_x, mouse_tile_y, turret_id)
                 turret_group.add(turret)
-                world.money -= BUY_COST
+                world.money -= TURRET_COST[turret_id - 1]
 
     def select_turret(mouse_pos):
         mouse_tile_x = mouse_pos[0] // TILE_SIZE
@@ -276,7 +333,6 @@ def level1():
 
     # игровые переменные
     game_over = False
-    game_outcome = 0  # -1 если поражение 1 если победа
     last_enemy_spawn = pg.time.get_ticks()
     turret_placing = False
     selected_turret = None
@@ -297,24 +353,23 @@ def level1():
             # проверить, проиграл ли игрок
             if world.health <= 0:
                 game_over = True
-                game_outcome = -1  # проигрыш
-                ###################game_over_menu()
+                level = 1
+                game_over_menu1(level)
+
             # проверить, победил ли игрок ли игрок
             if world.wave > TOTAL_WAVES:
                 game_over = True
-                game_outcome = 1  # выигрыш
                 ###################game_win_menu()
 
         # обновление групп
         enemy_group.update(world)
-        turret_group.update(enemy_group)
+        turret_group.update(enemy_group, world)
 
         # подсветка выбранной турели
         if selected_turret:
             selected_turret.selected = True
 
         # отрисовка экрана
-        screen.blit(battle_gui, (768, 0))
         world.draw(screen)
 
         # отрисовка групп
@@ -322,13 +377,14 @@ def level1():
         for turret in turret_group:
             turret.draw(screen)
 
-        # отрисовка хп, денег, волны
+        # отрисовка хп, денег, волны, интерфейса
         draw_text(str(world.health), text_font, "grey100", 786 + 50, 50)
         draw_text(str(world.money), text_font, "grey100", 786 + 50, 85)
         draw_text(str(world.wave) + "/15", text_font, "grey100", 786 + 50, 120)
         screen.blit(heart_icon, (786 + 18, 50-3))
         screen.blit(coin_icon, (786 + 18, 85-3))
         screen.blit(wave_icon, (786 + 18, 120-3))
+        screen.blit(battle_gui, (768, 0))
 
         # спавн врагов
         if wave_started == True:
@@ -391,11 +447,10 @@ def level1():
             if event.type == pg.USEREVENT and event.button == speedup_button:
                 if game_speedup:
                     game_speedup = False
-                    FPS = 60
+                    world.game_speed = 1
                 else:
                     game_speedup = True
-                    FPS = 120
-
+                    world.game_speed = 2
 
             # проверка, начата ли волна
             if wave_started == False:
@@ -410,7 +465,6 @@ def level1():
             speedup_button.draw(screen)
             turret1_button.draw(screen)
             turret2_button.draw(screen)
-            begin_button.draw(screen)
             if turret_placing:
                 cursor_rect = turrets_images[turret_id - 1].get_rect()
                 cursor_pos = pg.mouse.get_pos()
@@ -430,8 +484,8 @@ def level1():
             world.reset_wave()
             world.process_enemies()
 
-        print(game_speedup)
         pg.display.flip()
+
 
 
 # Запуск главного меню

@@ -11,6 +11,7 @@ class World():
         self.waypoints = []
         self.health = BASE_HEALTH
         self.money = MONEY
+        self.game_speed = 1
         self.level_data = data
         self.image = map_image
         self.enemy_list = []
@@ -22,7 +23,7 @@ class World():
     def process_data(self):
         #заходим в файл уровня, чтобы достать нужную инфу
         for layer in self.level_data["layers"]:
-            if layer["name"] == "\u0421\u043b\u043e\u0439 \u0442\u0430\u0439\u043b\u043e\u0432 1":
+            if layer["name"] == "tiles":
                 self.tile_map = layer["data"]
 
             elif layer["name"] == "waypoints":

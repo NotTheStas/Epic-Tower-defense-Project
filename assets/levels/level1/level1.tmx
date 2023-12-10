@@ -4,7 +4,7 @@
   <export target="level1.tmj" format="json"/>
  </editorsettings>
  <tileset firstgid="1" source="tile_set1.tsx"/>
- <layer id="1" name="Слой тайлов 1" width="12" height="12">
+ <layer id="1" name="tiles" width="12" height="12">
   <data encoding="csv">
 9,9,9,9,9,9,9,9,12,13,9,9,
 9,9,9,9,9,9,9,9,12,13,9,9,
