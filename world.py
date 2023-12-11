@@ -5,8 +5,9 @@ from constants import *
 
 class World():
 
-    def __init__(self, data, map_image):
+    def __init__(self, data, map_image, running_level):
         self.wave = 1
+        self.level_id = running_level
         self.tile_map = []
         self.waypoints = []
         self.health = BASE_HEALTH
@@ -39,7 +40,7 @@ class World():
             self.waypoints.append((temp_x+x, temp_y))
 
     def process_enemies(self):
-        enemies = LEVEL1_WAVE_DATA[self.wave - 1]
+        enemies = (LEVELS_WAVE_DATA.get(f'LEVEL{self.level_id}_WAVE_DATA'))[self.wave - 1]
         for enemy_type in enemies:
             enemies_to_spawn = enemies[enemy_type]
             for enemy in range(enemies_to_spawn):
