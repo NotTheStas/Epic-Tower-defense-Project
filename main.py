@@ -260,7 +260,68 @@ def game_over_menu1(running_level):
         pg.display.flip()
 
 
-####def game_win_menu():
+def game_win_menu(running_level, rest_lifes):
+    #создание кнопок
+    restart_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 300, 252, 74, "Restart",
+                                 'assets/textures/gui/buttons/rect/default@2x.png',
+                                 'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+    main_menu_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 400, 252, 74, "Main menu",
+                                      'assets/textures/gui/buttons/rect/default@2x.png',
+                                      'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+    levels_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 500, 252, 74, "Level Select",
+                                        'assets/textures/gui/buttons/rect/default@2x.png',
+                                        'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+    buttons_list = [restart_button, main_menu_button, levels_button]
+
+    #количество звёзд
+    if rest_lifes >= 18:
+        stars = pg.image.load('assets/textures/gui/level/star/Group/3-3@2x.png')
+    elif rest_lifes >= 10:
+        stars = pg.image.load('assets/textures/gui/level/star/Group/2-3@2x.png')
+    elif rest_lifes >= 4:
+        stars = pg.image.load('assets/textures/gui/level/star/Group/1-3@2x.png')
+    else:
+        stars = pg.image.load('assets/textures/gui/level/star/Group/0-3@2x.png')
+
+    #фон
+    background = pg.image.load("assets/textures/menu.png")
+
+    game_win_run = True
+    while game_win_run:
+        screen.blit(background, (0, 0))
+
+        font = pg.font.Font(None, 72)
+        text_surface = font.render("Победа!", True, (255, 255, 255))
+        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH / 2, 100))
+        screen.blit(text_surface, text_rect)
+
+        screen.blit(stars, (SCREEN_WIDTH / 2 - 77,150))
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                game_win_run = False
+                pg.quit()
+
+            if event.type == pg.USEREVENT and event.button == restart_button:
+                game_win_run = False
+                level(running_level)
+
+            if event.type == pg.USEREVENT and event.button == main_menu_button:
+                game_win_run = False
+                main_menu()
+
+            if event.type == pg.USEREVENT and event.button == levels_button:
+                game_win_run = False
+                levels_menu()
+
+            for buttons in buttons_list:
+                buttons.handle_event(event)
+
+        for buttons in buttons_list:
+            buttons.check_hover(pg.mouse.get_pos())
+            buttons.draw(screen)
+
+        pg.display.flip()
 
 # Сцена Первого уровня
 def level(running_level):
