@@ -21,7 +21,7 @@ ENEMY_DATA = {
     },
     "light_tank": {
         "health": 120,
-        "speed": 1.5
+        "speed": 5
     },
     "heavy_tank": {
         "health": 250,
@@ -33,7 +33,7 @@ LEVELS_WAVE_DATA = {
     "LEVEL1_WAVE_DATA": [
         {
             # 1
-            "soldier": 10,
+            "soldier": 0,
             "heavy_soldier": 0,
             "runner": 0,
             "light_robot": 0,

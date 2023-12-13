@@ -437,13 +437,13 @@ def level(running_level):
             # проверить, проиграл ли игрок
             if world.health <= 0:
                 game_over = True
-                level = 1
-                game_over_menu1(level)
+                game_over_menu1(running_level)
 
             # проверить, победил ли игрок ли игрок
             if world.wave > TOTAL_WAVES:
                 game_over = True
-                ###################game_win_menu()
+                game_win_menu(running_level, world.health)
+
 
         # обновление групп
         enemy_group.update(world)
