@@ -521,11 +521,12 @@ def level(running_level):
                     else:
                         selected_turret = select_turret(mouse_pos)
 
-            if event.type == pg.USEREVENT and event.button == turret1_button and turret_placing == False:
+            if event.type == pg.USEREVENT and event.button == turret1_button:
+
                 turret_id = 1
                 turret_placing = True
 
-            if event.type == pg.USEREVENT and event.button == turret2_button and turret_placing == False:
+            if event.type == pg.USEREVENT and event.button == turret2_button:
                 turret_id = 2
                 turret_placing = True
 
