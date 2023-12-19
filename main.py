@@ -22,6 +22,12 @@ pg.display.set_caption("Epic Tower Defense")
 text_font = pg.font.SysFont("Consolas", 30, bold=True)
 large_font = pg.font.SysFont("Consolas", 36)
 
+LEVELS_STARS = {
+    "level1": 0,
+    "level2": 0,
+    "level3": 0
+}
+
 
 def draw_text(text, font, text_col, x, y):
     img = font.render(text, True, text_col)
@@ -87,6 +93,11 @@ def levels_menu():
 
     menu_background = pg.image.load("assets/textures/menu.png")
 
+    stars = []
+    for level_id in range(1, 3 + 1):
+        stars.append(
+            pg.image.load(f'assets/textures/gui/level/star/Group/{LEVELS_STARS[f"level{level_id}"]}-3@1x.png'))
+
     levels_menu_run = True
     while levels_menu_run:
         screen.blit(menu_background, (0, 0))
@@ -129,6 +140,10 @@ def levels_menu():
         for buttons in [level1_button, level2_button, level3_button, back_button]:
             buttons.check_hover(pg.mouse.get_pos())
             buttons.draw(screen)
+
+        screen.blit(stars[0], ((SCREEN_WIDTH / 3) - 200 + 46, SCREEN_HEIGHT / 2 + 1))
+        screen.blit(stars[1], ((SCREEN_WIDTH / 3) + 127, SCREEN_HEIGHT / 2 + 1))
+        screen.blit(stars[2], ((SCREEN_WIDTH / 3) + 408, SCREEN_HEIGHT / 2 + 1))
 
         pg.display.flip()
 
@@ -261,29 +276,33 @@ def game_over_menu1(running_level):
 
 
 def game_win_menu(running_level, rest_lifes):
-    #создание кнопок
+    # создание кнопок
     restart_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 300, 252, 74, "Restart",
                                  'assets/textures/gui/buttons/rect/default@2x.png',
                                  'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
     main_menu_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 400, 252, 74, "Main menu",
-                                      'assets/textures/gui/buttons/rect/default@2x.png',
-                                      'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+                                   'assets/textures/gui/buttons/rect/default@2x.png',
+                                   'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
     levels_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 500, 252, 74, "Level Select",
-                                        'assets/textures/gui/buttons/rect/default@2x.png',
-                                        'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
+                                'assets/textures/gui/buttons/rect/default@2x.png',
+                                'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
     buttons_list = [restart_button, main_menu_button, levels_button]
 
-    #количество звёзд
+    # количество звёзд
     if rest_lifes >= 18:
         stars = pg.image.load('assets/textures/gui/level/star/Group/3-3@2x.png')
+        LEVELS_STARS[f"level{running_level}"] = 3
     elif rest_lifes >= 10:
         stars = pg.image.load('assets/textures/gui/level/star/Group/2-3@2x.png')
+        LEVELS_STARS[f"level{running_level}"] = 2
     elif rest_lifes >= 4:
         stars = pg.image.load('assets/textures/gui/level/star/Group/1-3@2x.png')
+        LEVELS_STARS[f"level{running_level}"] = 1
     else:
         stars = pg.image.load('assets/textures/gui/level/star/Group/0-3@2x.png')
+        LEVELS_STARS[f"level{running_level}"] = 0
 
-    #фон
+    # фон
     background = pg.image.load("assets/textures/menu.png")
 
     game_win_run = True
@@ -295,7 +314,7 @@ def game_win_menu(running_level, rest_lifes):
         text_rect = text_surface.get_rect(center=(SCREEN_WIDTH / 2, 100))
         screen.blit(text_surface, text_rect)
 
-        screen.blit(stars, (SCREEN_WIDTH / 2 - 77,150))
+        screen.blit(stars, (SCREEN_WIDTH / 2 - 77, 150))
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -322,6 +341,7 @@ def game_win_menu(running_level, rest_lifes):
             buttons.draw(screen)
 
         pg.display.flip()
+
 
 # Сцена Первого уровня
 def level(running_level):
@@ -444,7 +464,6 @@ def level(running_level):
                 game_over = True
                 game_win_menu(running_level, world.health)
 
-
         # обновление групп
         enemy_group.update(world)
         turret_group.update(enemy_group, world)
@@ -522,7 +541,6 @@ def level(running_level):
                         selected_turret = select_turret(mouse_pos)
 
             if event.type == pg.USEREVENT and event.button == turret1_button:
-
                 turret_id = 1
                 turret_placing = True
 

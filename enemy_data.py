@@ -38,7 +38,7 @@ LEVELS_WAVE_DATA = {
             "runner": 0,
             "light_robot": 0,
             "robot": 0,
-            "light_tank": 1,
+            "light_tank": 15,
             "heavy_tank": 0
         },
         {
