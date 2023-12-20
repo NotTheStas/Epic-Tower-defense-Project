@@ -1,30 +1,37 @@
 ENEMY_DATA = {
     "soldier": {
         "health": 10,
+        "money": 5,
         "speed": 1
     },
     "heavy_soldier": {
-        "health": 15,
+        "health": 20,
+        "money": 10,
         "speed": 0.5
     },
     "runner": {
-        "health": 20,
+        "health": 10,
+        "money": 10,
         "speed": 2
     },
     "robot": {
         "health": 20,
+        "money": 15,
         "speed": 2
     },
     "light_robot": {
         "health": 30,
+        "money": 20,
         "speed": 2
     },
     "light_tank": {
-        "health": 120,
-        "speed": 5
+        "health": 40,
+        "money": 25,
+        "speed": 1.5
     },
     "heavy_tank": {
-        "health": 250,
+        "health": 85,
+        "money": 50,
         "speed": 1
     },
 }
@@ -33,12 +40,12 @@ LEVELS_WAVE_DATA = {
     "LEVEL1_WAVE_DATA": [
         {
             # 1
-            "soldier": 0,
+            "soldier": 10,
             "heavy_soldier": 0,
             "runner": 0,
             "light_robot": 0,
             "robot": 0,
-            "light_tank": 15,
+            "light_tank": 0,
             "heavy_tank": 0
         },
         {
@@ -190,7 +197,7 @@ LEVELS_WAVE_DATA = {
             "runner": 0,
             "light_robot": 0,
             "robot": 0,
-            "light_tank": 10,
+            "light_tank": 0,
             "heavy_tank": 0
         },
         {
@@ -339,7 +346,7 @@ LEVELS_WAVE_DATA = {
         {
             # 1
             "soldier": 10,
-            "heavy_soldier": 0,
+            "heavy_soldier": 6,
             "runner": 0,
             "light_robot": 0,
             "robot": 0,

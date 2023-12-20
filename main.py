@@ -448,8 +448,8 @@ def level(running_level):
     enemy_group = pg.sprite.Group()
     turret_group = pg.sprite.Group()
 
-    level1_run = True
-    while level1_run:
+    level_run = True
+    while level_run:
 
         clock.tick(FPS)
 
@@ -463,10 +463,6 @@ def level(running_level):
             if world.wave > TOTAL_WAVES:
                 game_over = True
                 game_win_menu(running_level, world.health)
-
-        # обновление групп
-        enemy_group.update(world)
-        turret_group.update(enemy_group, world)
 
         # подсветка выбранной турели
         if selected_turret:
@@ -500,6 +496,10 @@ def level(running_level):
                     last_enemy_spawn = pg.time.get_ticks()
         else:
             begin_button.draw(screen)
+
+        # обновление групп
+        enemy_group.update(world)
+        turret_group.update(enemy_group, world)
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
