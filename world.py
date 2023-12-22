@@ -1,6 +1,6 @@
 import pygame as pg
-from enemy import *
 import random
+from enemy import *
 from constants import *
 
 class World():

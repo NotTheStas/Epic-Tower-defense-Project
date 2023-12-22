@@ -1,6 +1,6 @@
 import pygame as pg
-from pygame.math import Vector2
 import math
+from pygame.math import Vector2
 from enemy_data import *
 
 class Enemy(pg.sprite.Sprite):
@@ -9,10 +9,11 @@ class Enemy(pg.sprite.Sprite):
         self.waypoints = waypoints
         self.pos = Vector2(self.waypoints[0])
         self.target_waypoint = 1
-        self.health = ENEMY_DATA.get(enemy_type)["health"]
-        self.speed = ENEMY_DATA.get(enemy_type)["speed"]
+        self.type = enemy_type
+        self.health = ENEMY_DATA.get(self.type)["health"]
+        self.speed = ENEMY_DATA.get(self.type)["speed"]
         self.angle = 0
-        self.original_image = images.get(enemy_type)
+        self.original_image = images.get(self.type)
         self.image = pg.transform.rotate(self.original_image, self.angle)
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
@@ -31,6 +32,7 @@ class Enemy(pg.sprite.Sprite):
             self.kill()
             world.missed_enemies += 1
             world.health -= 1
+            pg.mixer.Sound("assets/sound/health damage.wav").play()
 
         #расчитать расстояние до цели
         dist = self.movement.length()
@@ -54,5 +56,5 @@ class Enemy(pg.sprite.Sprite):
     def check_alive(self, world):
         if self.health <= 0:
             world.killed_enemies += 1
-            world.money += 15
+            world.money += ENEMY_DATA.get(self.type)["money"]
             self.kill()

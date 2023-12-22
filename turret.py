@@ -1,6 +1,7 @@
 import pygame as pg
 from turret_data import TURRET_DATA
 import math
+from enemy_data import ENEMY_DATA
 
 
 class Turret(pg.sprite.Sprite):
@@ -51,7 +52,6 @@ class Turret(pg.sprite.Sprite):
         size = sprite_sheet.get_height()
         animation_list = []
         for x in range(self.animation_steps):
-            print(x)
             temp_img = sprite_sheet.subsurface(x * size, 0, size, size)
             animation_list.append(temp_img)
         return animation_list
@@ -77,7 +77,12 @@ class Turret(pg.sprite.Sprite):
                 if dist < self.range:
                     self.target = enemy
                     self.angle = math.degrees(math.atan2(-y_dist, x_dist))
-                    self.target.health -= 5
+                    if (ENEMY_DATA.get(enemy.type)["vehicle"] == 1) and (self.type == 2):
+                        self.target.health -= 2 * TURRET_DATA.get(f"turret{self.type}")[self.upgrade_level - 1].get(
+                            'damage')
+                    else:
+                        self.target.health -= TURRET_DATA.get(f"turret{self.type}")[self.upgrade_level - 1].get(
+                            'damage')
                     self.shoot_sound.play()
                     break
 

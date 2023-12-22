@@ -22,25 +22,17 @@ pg.display.set_caption("Epic Tower Defense")
 text_font = pg.font.SysFont("Consolas", 30, bold=True)
 large_font = pg.font.SysFont("Consolas", 36)
 
-LEVELS_STARS = {
-    "level1": 0,
-    "level2": 0,
-    "level3": 0
-}
-
-
-def draw_text(text, font, text_col, x, y):
-    img = font.render(text, True, text_col)
-    screen.blit(img, (x, y))
-
-
+# открытие сохранения
+stars_save = open("savedata/stars.txt")
+LEVELS_STARS = list(map(int, stars_save.readline().split()))
+stars_save.close()
 # Сцена Главного меню
 def main_menu():
     # Создание кнопок
-    levels_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 200, 252, 74, "Level Select",
+    levels_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 200, 252, 74, "Выбор уровня",
                                 'assets/textures/gui/buttons/rect/default@2x.png',
                                 'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
-    quit_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 300, 252, 74, "Quit",
+    quit_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 300, 252, 74, "Выход",
                               'assets/textures/gui/buttons/rect/default@2x.png',
                               'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
 
@@ -90,13 +82,14 @@ def levels_menu():
     back_button = ImageButton(20, 645, 110, 110, "", 'assets/textures/gui/buttons/square/ArrowLeft-Thin/Default@2x.png',
                               'assets/textures/gui/buttons/square/ArrowLeft-Thin/Hover@2x.png',
                               'assets/sound/button.wav')
+    buttons_list = [level1_button, level2_button, level3_button, back_button]
 
     menu_background = pg.image.load("assets/textures/menu.png")
 
     stars = []
     for level_id in range(1, 3 + 1):
         stars.append(
-            pg.image.load(f'assets/textures/gui/level/star/Group/{LEVELS_STARS[f"level{level_id}"]}-3@1x.png'))
+            pg.image.load(f'assets/textures/gui/level/star/Group/{LEVELS_STARS[level_id-1]}-3@1x.png'))
 
     levels_menu_run = True
     while levels_menu_run:
@@ -134,10 +127,10 @@ def levels_menu():
                 running_level = 3
                 level(running_level)
 
-            for buttons in [level1_button, level2_button, level3_button, back_button]:
+            for buttons in buttons_list:
                 buttons.handle_event(event)
 
-        for buttons in [level1_button, level2_button, level3_button, back_button]:
+        for buttons in buttons_list:
             buttons.check_hover(pg.mouse.get_pos())
             buttons.draw(screen)
 
@@ -147,25 +140,25 @@ def levels_menu():
 
         pg.display.flip()
 
-
+# Сцена Паузы
 def pause(running_level):
     pause_width = SCREEN_WIDTH / 2
     pause_height = SCREEN_HEIGHT - 100
 
     # кнопки
-    levels_button = ImageButton(pause_width - 126, 400, 252, 74, "Level Select",
+    levels_button = ImageButton(pause_width - 126, 400, 252, 74, "Выбор уровня",
                                 'assets/textures/gui/buttons/rect/default@2x.png',
                                 'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
 
-    quit_button = ImageButton(pause_width - 126, 500, 252, 74, "Quit",
+    quit_button = ImageButton(pause_width - 126, 500, 252, 74, "Выход",
                               'assets/textures/gui/buttons/rect/default@2x.png',
                               'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
 
-    restart_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 300, 252, 74, "Restart",
+    restart_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 300, 252, 74, "Начать заново",
                                  'assets/textures/gui/buttons/rect/default@2x.png',
                                  'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
 
-    continue_button = ImageButton(pause_width - 126, 200, 252, 74, "Continue",
+    continue_button = ImageButton(pause_width - 126, 200, 252, 74, "Продолжить",
                                   'assets/textures/gui/buttons/rect/default@2x.png',
                                   'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
 
@@ -206,6 +199,7 @@ def pause(running_level):
                 pause_menu_run = False
 
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                pg.mixer.Sound("assets/sound/button.wav").play()
                 pause_menu_run = False
 
             for buttons in buttons_list:
@@ -220,13 +214,13 @@ def pause(running_level):
 
 # Сцена Меню Проигрыша
 def game_over_menu1(running_level):
-    restart_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 200, 252, 74, "Restart",
+    restart_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 200, 252, 74, "Начать заново",
                                  'assets/textures/gui/buttons/rect/default@2x.png',
                                  'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
-    to_main_menu_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 300, 252, 74, "Main menu",
+    to_main_menu_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 300, 252, 74, "Главное меню",
                                       'assets/textures/gui/buttons/rect/default@2x.png',
                                       'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
-    to_levels_menu_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 400, 252, 74, "Level Select",
+    to_levels_menu_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 400, 252, 74, "Выбор уровня",
                                         'assets/textures/gui/buttons/rect/default@2x.png',
                                         'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
     buttons_list = [restart_button, to_main_menu_button, to_levels_menu_button]
@@ -250,12 +244,6 @@ def game_over_menu1(running_level):
             if event.type == pg.USEREVENT and event.button == restart_button and level == 1:
                 game_over_run = False
                 level(running_level)
-            # if event.type == pg.USEREVENT and event.button == restart_button and level == 2:
-            #   game_over_run = False
-            #   level2()
-            # if event.type == pg.USEREVENT and event.button == restart_button and level == 3:
-            #    game_over_run = False
-            #    level3()
 
             if event.type == pg.USEREVENT and event.button == to_main_menu_button:
                 game_over_run = False
@@ -275,35 +263,42 @@ def game_over_menu1(running_level):
         pg.display.flip()
 
 
+# Сцена Меню Выигрыша
 def game_win_menu(running_level, rest_lifes):
     # создание кнопок
-    restart_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 300, 252, 74, "Restart",
+    restart_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 300, 252, 74, "Начать заново",
                                  'assets/textures/gui/buttons/rect/default@2x.png',
                                  'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
-    main_menu_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 400, 252, 74, "Main menu",
+    main_menu_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 400, 252, 74, "Главное меню",
                                    'assets/textures/gui/buttons/rect/default@2x.png',
                                    'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
-    levels_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 500, 252, 74, "Level Select",
+    levels_button = ImageButton(SCREEN_WIDTH / 2 - (252 / 2), 500, 252, 74, "Выбор уровня",
                                 'assets/textures/gui/buttons/rect/default@2x.png',
                                 'assets/textures/gui/buttons/rect/hover@2x.png', 'assets/sound/button.wav')
     buttons_list = [restart_button, main_menu_button, levels_button]
 
-    # количество звёзд
-    if rest_lifes >= 18:
-        stars = pg.image.load('assets/textures/gui/level/star/Group/3-3@2x.png')
-        LEVELS_STARS[f"level{running_level}"] = 3
-    elif rest_lifes >= 10:
-        stars = pg.image.load('assets/textures/gui/level/star/Group/2-3@2x.png')
-        LEVELS_STARS[f"level{running_level}"] = 2
-    elif rest_lifes >= 4:
-        stars = pg.image.load('assets/textures/gui/level/star/Group/1-3@2x.png')
-        LEVELS_STARS[f"level{running_level}"] = 1
-    else:
-        stars = pg.image.load('assets/textures/gui/level/star/Group/0-3@2x.png')
-        LEVELS_STARS[f"level{running_level}"] = 0
-
     # фон
     background = pg.image.load("assets/textures/menu.png")
+
+    # количество звёзд
+    if rest_lifes >= BASE_HEALTH*0.9:
+        stars = pg.image.load('assets/textures/gui/level/star/Group/3-3@2x.png')
+        LEVELS_STARS[running_level-1] = 3
+    elif rest_lifes >= BASE_HEALTH*0.5:
+        stars = pg.image.load('assets/textures/gui/level/star/Group/2-3@2x.png')
+        LEVELS_STARS[running_level-1] = 2
+    elif rest_lifes >= BASE_HEALTH*0.2:
+        stars = pg.image.load('assets/textures/gui/level/star/Group/1-3@2x.png')
+        LEVELS_STARS[running_level-1] = 1
+    else:
+        stars = pg.image.load('assets/textures/gui/level/star/Group/0-3@2x.png')
+        LEVELS_STARS[running_level-1] = 0
+
+    print(" ".join(map(str, LEVELS_STARS)))
+    # запись сохранения
+    stars_save = open("savedata/stars.txt", "w")
+    stars_save.write(" ".join(map(str, LEVELS_STARS)))
+    stars_save.close()
 
     game_win_run = True
     while game_win_run:
@@ -343,7 +338,7 @@ def game_win_menu(running_level, rest_lifes):
         pg.display.flip()
 
 
-# Сцена Первого уровня
+# Сцена Уровня
 def level(running_level):
     # загрузка изображений
     enemy_images = {
@@ -379,13 +374,13 @@ def level(running_level):
     turret2_button = ImageButton(768 + 170, 250, 105, 105, "",
                                  'assets/textures/gui/button/icon/rocket1_iconDefault.png',
                                  "assets/textures/gui/button/icon/rocket1_iconHover.png", 'assets/sound/button.wav')
-    cancel_button = ImageButton(768 + 45, 400, 230, 45, "Cancel",
+    cancel_button = ImageButton(768 + 45, 400, 230, 45, "Отменить",
                                 'assets/textures/gui/buttons/rect/cancel_buttonDefault.png',
                                 "assets/textures/gui/buttons/rect/cancel_buttonHover.png", 'assets/sound/button.wav')
-    upgrade_button = ImageButton(768 + 45, 460, 230, 45, "Upgrade",
+    upgrade_button = ImageButton(768 + 45, 460, 230, 45, "Улучшить",
                                  'assets/textures/gui/buttons/rect/upgrade_buttonDefault.png',
                                  "assets/textures/gui/buttons/rect/upgrade_buttonHover.png", 'assets/sound/button.wav')
-    begin_button = ImageButton(768 + 45, 520, 230, 45, "Begin Wave",
+    begin_button = ImageButton(768 + 45, 520, 230, 45, "Начать волну",
                                'assets/textures/gui/buttons/rect/begin_buttonDefault.png',
                                "assets/textures/gui/buttons/rect/begin_buttonHover.png", 'assets/sound/button.wav')
     speedup_button = ImageButton(768 + 107.5, 580, 105, 105, "",
@@ -435,6 +430,10 @@ def level(running_level):
         for turret in turret_group:
             turret.selected = False
 
+    def draw_text(text, font, text_col, x, y):
+        img = font.render(text, True, text_col)
+        screen.blit(img, (x, y))
+
     # игровые переменные
     game_over = False
     last_enemy_spawn = pg.time.get_ticks()
@@ -457,11 +456,13 @@ def level(running_level):
             # проверить, проиграл ли игрок
             if world.health <= 0:
                 game_over = True
+                pg.mixer.Sound("assets/sound/defeat.wav").play()
                 game_over_menu1(running_level)
 
             # проверить, победил ли игрок ли игрок
             if world.wave > TOTAL_WAVES:
                 game_over = True
+                pg.mixer.Sound("assets/sound/testing/unknown.wav").play()
                 game_win_menu(running_level, world.health)
 
         # подсветка выбранной турели
@@ -503,10 +504,10 @@ def level(running_level):
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                levels_menu_run = False
                 pg.quit()
 
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                pg.mixer.Sound("assets/sound/button.wav").play()
                 turret1_button.draw(screen)
                 turret2_button.draw(screen)
                 speedup_button.draw(screen)

@@ -4,7 +4,7 @@ TURRET_DATA = {
                     # 1 level cannon
                     "range": 150,
                     "cooldown": 1000,
-                    "damage": 10,
+                    "damage": 5,
                     "animation_steps": 8
 
                 },
@@ -19,7 +19,7 @@ TURRET_DATA = {
                     # 3 level cannon
                     "range": 200,
                     "cooldown": 650,
-                    "damage": 15,
+                    "damage": 10,
                     "animation_steps": 13
                 }
             ],
@@ -29,21 +29,21 @@ TURRET_DATA = {
                     # 1 level
                     "range": 150,
                     "cooldown": 1000,
-                    "damage": 15,
+                    "damage": 10,
                     "animation_steps": 8
                 },
                 {
                     # 2 level
                     "range": 150,
                     "cooldown": 1000,
-                    "damage": 20,
+                    "damage": 15,
                     "animation_steps": 8
                 },
                 {
                     # 3 level
                     "range": 150,
                     "cooldown": 1000,
-                    "damage": 25,
+                    "damage": 20,
                     "animation_steps": 8
                 }
 
