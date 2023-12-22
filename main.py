@@ -26,6 +26,8 @@ large_font = pg.font.SysFont("Consolas", 36)
 stars_save = open("savedata/stars.txt")
 LEVELS_STARS = list(map(int, stars_save.readline().split()))
 stars_save.close()
+
+
 # Сцена Главного меню
 def main_menu():
     # Создание кнопок
@@ -89,7 +91,7 @@ def levels_menu():
     stars = []
     for level_id in range(1, 3 + 1):
         stars.append(
-            pg.image.load(f'assets/textures/gui/level/star/Group/{LEVELS_STARS[level_id-1]}-3@1x.png'))
+            pg.image.load(f'assets/textures/gui/level/star/Group/{LEVELS_STARS[level_id - 1]}-3@1x.png'))
 
     levels_menu_run = True
     while levels_menu_run:
@@ -139,6 +141,7 @@ def levels_menu():
         screen.blit(stars[2], ((SCREEN_WIDTH / 3) + 408, SCREEN_HEIGHT / 2 + 1))
 
         pg.display.flip()
+
 
 # Сцена Паузы
 def pause(running_level):
@@ -281,18 +284,18 @@ def game_win_menu(running_level, rest_lifes):
     background = pg.image.load("assets/textures/menu.png")
 
     # количество звёзд
-    if rest_lifes >= BASE_HEALTH*0.9:
+    if rest_lifes >= BASE_HEALTH * 0.9:
         stars = pg.image.load('assets/textures/gui/level/star/Group/3-3@2x.png')
-        LEVELS_STARS[running_level-1] = 3
-    elif rest_lifes >= BASE_HEALTH*0.5:
+        LEVELS_STARS[running_level - 1] = 3
+    elif rest_lifes >= BASE_HEALTH * 0.5:
         stars = pg.image.load('assets/textures/gui/level/star/Group/2-3@2x.png')
-        LEVELS_STARS[running_level-1] = 2
-    elif rest_lifes >= BASE_HEALTH*0.2:
+        if LEVELS_STARS[running_level - 1] < 3: LEVELS_STARS[running_level - 1] = 2
+    elif rest_lifes >= BASE_HEALTH * 0.2:
         stars = pg.image.load('assets/textures/gui/level/star/Group/1-3@2x.png')
-        LEVELS_STARS[running_level-1] = 1
+        if LEVELS_STARS[running_level - 1] < 2: LEVELS_STARS[running_level - 1] = 1
     else:
         stars = pg.image.load('assets/textures/gui/level/star/Group/0-3@2x.png')
-        LEVELS_STARS[running_level-1] = 0
+        if LEVELS_STARS[running_level - 1] < 1: LEVELS_STARS[running_level - 1] = 0
 
     print(" ".join(map(str, LEVELS_STARS)))
     # запись сохранения
@@ -415,7 +418,7 @@ def level(running_level):
                     space_is_free = False
             if space_is_free == True:
                 turret = Turret(turrets_spritesheets[turret_id - 1], mouse_tile_x, mouse_tile_y, turret_id,
-                                turret_sounds[turret_id - 1])
+                turret_sounds[turret_id - 1])
                 turret_group.add(turret)
                 world.money -= TURRET_COST[turret_id - 1]
 
